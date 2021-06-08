@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import logo from './logo.png'; 
 
 class Todo extends React.Component{
   constructor(props){
@@ -28,12 +29,11 @@ class Todo extends React.Component{
 
   render(){
     return ( 
-      <div>
-        <h1>Todo</h1>
-        <h2>Add Item</h2>
+      <div class="container">
+        <h1>Todo List</h1>
         <AddItemForm 
-          onHandleSubmit={this.onHandleSubmit}/>
-        <h2>Item List</h2>
+          onHandleSubmit={this.onHandleSubmit}
+		  />
         <ul>
             {this.props.tasks.map(task => (
               <DetailItem 
@@ -59,6 +59,7 @@ class AddItemForm extends React.Component{
   onHandleChange(e){
     this.setState({value:e.target.value});
   }
+
   onHandleSubmit(e){
     this.props.onHandleSubmit(this.state.value);
     this.setState({value:""});
@@ -66,7 +67,12 @@ class AddItemForm extends React.Component{
   }
   render(){
     return <form onSubmit={this.onHandleSubmit}>
-              <input type="text" onChange={this.onHandleChange} value={this.state.value}></input> 
+              <input 
+			  	type="text"
+				onChange={this.onHandleChange}
+				value={this.state.value}
+			  	placeholder="Input Your Task Here"></input> 
+				<img src={"./logo.svg"} />
               <input type="submit"></input>
             </form>
   }
@@ -91,7 +97,7 @@ class DetailItem extends React.Component{
   }
 }
 
-const tasks = [];
+const tasks = [{"id":1, "detail":"test task"}];
 
 
 ReactDOM.render(
