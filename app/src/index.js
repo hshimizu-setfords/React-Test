@@ -1,28 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import logo from './logo.png'; 
 
 class Todo extends React.Component{
   constructor(props){
     super(props);
     this.state = {tasks:this.props.tasks};
-    this.onHandleClick = this.onHandleClick.bind(this);
+    this.onHandleDeleteClick = this.onHandleDeleteClick.bind(this);
+    this.onHandleTaskClick = this.onHandleTaskClick.bind(this);
     this.onHandleSubmit = this.onHandleSubmit.bind(this);
   }
 
-  onHandleClick(task){
+  onHandleTaskClick(task){
     this.setState(prevState =>{
       const index = prevState.tasks.indexOf(task);
-      prevState.tasks.splice(index, 1);
-      return prevState.tasks;
+	  if(index !== -1)
+		prevState.tasks[index].done = !prevState.tasks[index].done;
+      return {tasks: prevState.tasks};
+    })
+  }
+  onHandleDeleteClick(task){
+    this.setState(prevState =>{
+      const index = prevState.tasks.indexOf(task);
+	  if(index !== -1)
+		prevState.tasks.splice(index, 1);
+      return {tasks: prevState.tasks};
     })
   }
   onHandleSubmit(detail){
     this.setState(prevState =>{
       const prevTasks = prevState.tasks;
       const newId = (prevTasks.length !== 0)? (prevTasks[prevTasks.length - 1].id + 1) : 0;
-      prevState.tasks.push({"id": newId, "detail": detail});
+      prevState.tasks.push({"id": newId, "detail": detail, "done":false});
       return {tasks: prevState.tasks}
     })
   }
@@ -39,7 +48,8 @@ class Todo extends React.Component{
               <DetailItem 
               key={task.id}
               task={task}
-              onHandleClick={this.onHandleClick}
+              onHandleDeleteClick={this.onHandleDeleteClick}
+			  onHandleTaskClick={this.onHandleTaskClick}
                />
             ))}
         </ul>
@@ -71,9 +81,8 @@ class AddItemForm extends React.Component{
 			  	type="text"
 				onChange={this.onHandleChange}
 				value={this.state.value}
-			  	placeholder="Input Your Task Here"></input> 
-				<img src={"./logo.svg"} />
-              <input type="submit"></input>
+			  	placeholder="Input Your Task"></input> 
+              <input type="submit" value="+"></input>
             </form>
   }
 
@@ -82,22 +91,28 @@ class DetailItem extends React.Component{
 
   constructor(props){
     super(props);
-    this.onHandleClick = this.onHandleClick.bind(this);
+    this.onHandleDeleteClick = this.onHandleDeleteClick.bind(this);
+    this.onHandleTaskClick = this.onHandleTaskClick.bind(this);
   }
 
-  onHandleClick(e){
-    this.props.onHandleClick(this.props.task);
+  onHandleDeleteClick(e){
+    this.props.onHandleDeleteClick(this.props.task);
+  }
+
+  onHandleTaskClick(e){
+    this.props.onHandleTaskClick(this.props.task);
   }
 
   render(){
-    return <li>
-              <button onClick={this.onHandleClick}>x</button>
-              &nbsp;{this.props.task.detail}
-            </li>
+	  let className = (this.props.task.done) ? "done" : "";
+    return <li  onClick={this.onHandleTaskClick}>
+				<span className={className}>{this.props.task.detail}</span>
+				<button class="delete-btn" onClick={this.onHandleDeleteClick}>×</button>
+			</li>
   }
 }
 
-const tasks = [{"id":1, "detail":"test task"}];
+const tasks = [];
 
 
 ReactDOM.render(
