@@ -2,8 +2,8 @@
 // Build Docker  
 $ docker-compose build  
 // create react app  
-$ docker-compose run --rm react sh -c "yarn create react-app ."  
-$ docker-compose run --rm react sh -c "yarn install ."  
+docker-compose run --rm react sh -c "npx create-react-app ."  
+docker-compose run --rm react sh -c "npm install"  
 // run container  
 $ docker-compose up -d  
 
